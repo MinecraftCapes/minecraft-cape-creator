@@ -1,0 +1,33 @@
+{
+  "name": "minecraft-cape-creator",
+  "description": "An automatic cape creator from a provided image",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "author": "james090500",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minecraftcapes/minecraft-cape-creator.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "module": "./dist/minecraft-cape-creator.js",
+  "main": "./dist/minecraft-cape-creator.cjs",
+  "exports": {
+    ".": {
+      "import": "./dist/minecraft-cape-creator.js",
+      "require": "./dist/minecraft-cape-creator.umd.cjs"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build-cf": "vite --config vite-cf.config.js build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "minecraft-cape-creator": "^0.0.7",
+    "vite": "^5.3.1"
+  }
+}
