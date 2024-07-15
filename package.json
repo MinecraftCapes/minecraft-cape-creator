@@ -26,12 +26,7 @@
     "build-cf": "vite --config vite-cf.config.js build",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "vue": "^3.4.31",
-    "vue-cropperjs": "^5.0.0"
-  },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.5",
     "minecraft-skin-viewer": "^0.0.7",
     "vite": "^5.3.1"
   }

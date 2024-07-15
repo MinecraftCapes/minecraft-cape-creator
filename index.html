@@ -18,14 +18,9 @@
                                 <img :src="imgSrc" class="texture-preview w-100 border"/>
                             </div>
                             <div class="col-md-6">
-                                <vue-cropper
-                                    ref="cropper"
-                                    :guides="false"
-                                    :aspect-ratio="10/16"
-                                    @ready="changeImage"
-                                    @cropend="changeImage"
-                                    :src="`https://upload.wikimedia.org/wikipedia/commons/a/a5/Red_Kitten_01.jpg`"
-                                />
+                                <div>
+                                    <img id="cropper-image" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Red_Kitten_01.jpg" style="max-width: 100%;"/>
+                                </div>
                             </div>
                             <hr class="my-2">
                             <div class="col-12">
@@ -40,7 +35,7 @@
                                 </div>
                                 <br>
                                 <div>
-                                    <h4>Set Scale {{`(${64 * Math.pow(2, scale - 1)} x ${32 * Math.pow(2, scale - 1)})`}}</h4>
+                                    <h4>Set Scale {{visualiseScale()}}</h4>
                                     <input type="range" class="form-range" min="1" max="6" step="1" v-model="scale" @change="changeScale">
                                 </div>
                             </div>
@@ -55,6 +50,7 @@
                 </div>
             </div>
         </div>
+        <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css"/>
         <style>
             .minecraft-skin-viewer {
                 width: 100%;
@@ -81,9 +77,8 @@
             }
         </style>
         <script type="module">
-            import { createApp } from 'vue'
-            import VueCropper from 'vue-cropperjs';
-            import 'cropperjs/dist/cropper.css';
+            import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+            import CropperJS from 'https://unpkg.com/cropperjs@1.6.2/dist/cropper.esm.js'
             import MinecraftSkinViewer from 'minecraft-skin-viewer'
             import MinecraftCapeCreator from './src/main.js'
 
@@ -91,6 +86,7 @@
                 data() {
                     return {
                         minecraftCapeCreator: new MinecraftCapeCreator(),
+                        cropper: null,
                         file: "",
                         color: "#FF0000",
                         scale: 1,
@@ -98,11 +94,24 @@
                     }
                 },
                 mounted() {
+                    let image = document.getElementById('cropper-image')
+                    this.cropper = new CropperJS(image, {
+                        aspectRatio: 10 / 16,
+                        guides: false,
+                        ready: this.changeImage,
+                        cropend: this.changeImage
+                    })
+                    console.log(this.cropper)
+
                     this.buildCape()
                 },
                 methods: {
+                    visualiseScale() {
+                        let realScale = Math.pow(2, this.scale - 1)
+                        return `${64 * realScale} / ${32 * realScale}`
+                    },
                     changeImage() {
-                        this.minecraftCapeCreator.setImage(this.$refs.cropper.getCroppedCanvas().toDataURL())
+                        this.minecraftCapeCreator.setImage(this.cropper.getCroppedCanvas().toDataURL())
                         this.buildCape();
                     },
                     changeColour() {
@@ -119,8 +128,7 @@
                             this.imgSrc = value;
                         })
                     }
-                },
-                components: { VueCropper}
+                }
             }).mount('#app')
           </script>
     </body>
