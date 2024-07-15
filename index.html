@@ -17,16 +17,41 @@
                             <div class="col-md-6 mb-1">
                                 <div>
                                     <h4>Select Image</h4>
-                                    <input type="file" class="form-control" @change="uploadImage" accept="image/*">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <input type="file" class="form-control" @change="uploadImage" accept="image/*">
+                                        </div>
+                                        <div class="col-1 align-middle align-content-center">
+                                            <p class="d-inline">or</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-primary" @click="loadRandomImage">Random Image</button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <br>
                                 <div>
                                     <h4>Set Color</h4>
-                                    <input type="color" class="form-control" v-model="color" @change="changeColour">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <input type="color" class="form-control" v-model="color" @change="changeColour">
+                                        </div>
+                                        <div class="col-1 align-middle align-content-center">
+                                            <p class="d-inline">or</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" v-model="autoColor" @change="changeColour">
+                                                <label class="form-check-label">
+                                                    Auto Color
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <br>
                                 <div>
-                                    <h4>Set Scale ({{visualiseScale()}})</h4>
+                                    <h4>Set Scale ({{ visualiseScale }})</h4>
                                     <input type="range" class="form-range" min="1" max="6" step="1" v-model="scale" @change="changeScale">
                                 </div>
                                 <hr>
@@ -35,6 +60,12 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
+                                <div class="position-relative">
+                                    <div class="form-check form-switch position-absolute m-3 end-0">
+                                        <input class="form-check-input" type="checkbox" role="switch" @click="toggleElytra">
+                                        <label class="form-check-label">Elytra</label>
+                                    </div>
+                                </div>
                                 <canvas id="minecraft-skin-viewer" class="border rounded shadow-lg"></canvas>
                             </div>
                         </div>
@@ -78,13 +109,7 @@
             }
 
             .texture-preview {
-                image-rendering: optimizeSpeed;             /* Legal fallback                 */
-                image-rendering: -moz-crisp-edges;          /* Firefox                        */
-                image-rendering: -o-crisp-edges;            /* Opera                          */
-                image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
-                image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
-                -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
-                image-rendering: pixelated;                 /* Chrome 41+, Firefox            */
+                image-rendering: pixelated;
             }
         </style>
         <script type="module">
@@ -96,15 +121,20 @@
             createApp({
                 data() {
                     return {
+                        seed: null,
                         minecraftSkinViewer: null,
                         minecraftCapeCreator: new MinecraftCapeCreator(),
                         cropper: null,
                         file: "",
+                        autoColor: true,
                         color: "#FF0000",
                         scale: 1,
-                        templateImageSrc: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Red_Kitten_01.jpg",
+                        templateImageSrc: null,
                         capePreviewSrc: null,
                     }
+                },
+                created() {
+                    this.loadRandomImage();
                 },
                 mounted() {
                     let image = document.getElementById('cropper-image')
@@ -124,9 +154,15 @@
                     this.buildCape()
                 },
                 methods: {
-                    visualiseScale() {
-                        let realScale = Math.pow(2, this.scale - 1)
-                        return `${64 * realScale} / ${32 * realScale}`
+                    loadRandomImage() {
+                        this.seed = Date.now()
+                        this.templateImageSrc = `https://picsum.photos/seed/${this.seed}/1600/900`
+                        if(this.cropper != null) {
+                            this.cropper.replace(this.templateImageSrc)
+                        }
+                    },
+                    toggleElytra(value) {
+                        this.minecraftSkinViewer.setElytra(value.target.checked)
                     },
                     uploadImage(event) {
                         var reader = new FileReader()
@@ -140,7 +176,11 @@
                         this.buildCape();
                     },
                     changeColour() {
-                        this.minecraftCapeCreator.setColor(this.color)
+                        if(this.autoColor) {
+                            this.minecraftCapeCreator.setAutoColor()
+                        } else {
+                            this.minecraftCapeCreator.setColor(this.color)
+                        }
                         this.buildCape()
                     },
                     changeScale() {
@@ -155,6 +195,12 @@
                     },
                     downloadCape() {
                         this.minecraftCapeCreator.downloadCape();
+                    }
+                },
+                computed: {
+                    visualiseScale() {
+                        let realScale = Math.pow(2, this.scale - 1)
+                        return `${64 * realScale} / ${32 * realScale}`
                     }
                 }
             }).mount('#app')
