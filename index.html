@@ -9,24 +9,15 @@
     <body data-bs-theme="dark">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-xl-8 col-12">
+                <div class="col-xl-6 col-md-8 col-12">
                     <div id="app" class="p-5">
                         <h1>Minecraft Cape Creator</h1>
                         <hr>
                         <div class="row">
-                            <div class="col-md-6">
-                                <img :src="imgSrc" class="texture-preview w-100 border"/>
-                            </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 mb-1">
                                 <div>
-                                    <img id="cropper-image" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Red_Kitten_01.jpg" style="max-width: 100%;"/>
-                                </div>
-                            </div>
-                            <hr class="my-2">
-                            <div class="col-12">
-                                <div>
-                                    <!-- <h4>Select Image</h4> -->
-                                    <!-- <input type="file" class="form-control" @change="openCropper"> -->
+                                    <h4>Select Image</h4>
+                                    <input type="file" class="form-control" @change="uploadImage" accept="image/*">
                                 </div>
                                 <br>
                                 <div>
@@ -35,10 +26,30 @@
                                 </div>
                                 <br>
                                 <div>
-                                    <h4>Set Scale {{visualiseScale()}}</h4>
+                                    <h4>Set Scale ({{visualiseScale()}})</h4>
                                     <input type="range" class="form-range" min="1" max="6" step="1" v-model="scale" @change="changeScale">
                                 </div>
+                                <hr>
+                                <div>
+                                    <img id="cropper-image" :src="templateImageSrc" class="mw-100"/>
+                                </div>
                             </div>
+                            <div class="col-md-6">
+                                <canvas id="minecraft-skin-viewer" class="border rounded shadow-lg"></canvas>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6 mb-1">
+                                <h3 class="text-center">Your Cape</h3>
+                                <p>This is your final cape design. You can download your cape by using the button below.</p>
+                                <p>This project aims to help users move images onto capes with minimual effort.</p>
+                                <button @click="downloadCape" class="btn btn-primary">Download Cape</button>
+                            </div>
+                            <div class="col-md-6">
+                                <img :src="capePreviewSrc" class="texture-preview w-100 border mb-1"/>
+                            </div>
+                            <hr class="my-2">
                         </div>
                         <hr>
                         <div class="text-center">
@@ -52,7 +63,7 @@
         </div>
         <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css"/>
         <style>
-            .minecraft-skin-viewer {
+            #minecraft-skin-viewer {
                 width: 100%;
                 height: 100%;
                 display: block;
@@ -61,7 +72,7 @@
             }
 
             @media (max-width: 576px) {
-                .minecraft-skin-viewer {
+                #minecraft-skin-viewer {
                     height: 50vh;
                 }
             }
@@ -85,12 +96,14 @@
             createApp({
                 data() {
                     return {
+                        minecraftSkinViewer: null,
                         minecraftCapeCreator: new MinecraftCapeCreator(),
                         cropper: null,
                         file: "",
                         color: "#FF0000",
                         scale: 1,
-                        imgSrc: null,
+                        templateImageSrc: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Red_Kitten_01.jpg",
+                        capePreviewSrc: null,
                     }
                 },
                 mounted() {
@@ -99,9 +112,14 @@
                         aspectRatio: 10 / 16,
                         guides: false,
                         ready: this.changeImage,
-                        cropend: this.changeImage
+                        cropend: this.changeImage,
+                        zoomable: false
                     })
-                    console.log(this.cropper)
+
+                    this.minecraftSkinViewer = new MinecraftSkinViewer({
+                        canvas: document.getElementById('minecraft-skin-viewer')
+                    })
+                    this.minecraftSkinViewer.playerObject.group.rotation.y = Math.PI
 
                     this.buildCape()
                 },
@@ -109,6 +127,13 @@
                     visualiseScale() {
                         let realScale = Math.pow(2, this.scale - 1)
                         return `${64 * realScale} / ${32 * realScale}`
+                    },
+                    uploadImage(event) {
+                        var reader = new FileReader()
+                        reader.readAsDataURL(event.target.files[0])
+                        reader.onload = () => {
+                            this.cropper.replace(reader.result)
+                        };
                     },
                     changeImage() {
                         this.minecraftCapeCreator.setImage(this.cropper.getCroppedCanvas().toDataURL())
@@ -123,10 +148,13 @@
                         this.buildCape()
                     },
                     buildCape() {
-                        console.log("Building")
                         this.minecraftCapeCreator.buildCape().then(value => {
-                            this.imgSrc = value;
+                            this.capePreviewSrc = value;
+                            this.minecraftSkinViewer.loadCape(this.capePreviewSrc)
                         })
+                    },
+                    downloadCape() {
+                        this.minecraftCapeCreator.downloadCape();
                     }
                 }
             }).mount('#app')
