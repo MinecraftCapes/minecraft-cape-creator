@@ -27,10 +27,9 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
     "minecraft-skin-viewer": "^0.0.7",
-    "vite": "^5.3.1"
-  },
-  "dependencies": {
+    "vite": "^5.3.1",
     "vue": "^3.4.31",
     "vue-cropperjs": "^5.0.0"
   }
