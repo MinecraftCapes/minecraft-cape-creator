@@ -31,6 +31,16 @@
                                 </div>
                                 <br>
                                 <div>
+                                    <h4>Show on Elytra</h4>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" v-model="showOnElytra" @change="changeElytra">
+                                        <label class="form-check-label">
+                                            Show on Elytra
+                                        </label>
+                                    </div>
+                                </div>
+                                <br>
+                                <div>
                                     <h4>Set Color</h4>
                                     <div class="row">
                                         <div class="col-7">
@@ -126,6 +136,7 @@
                         minecraftCapeCreator: new MinecraftCapeCreator(),
                         cropper: null,
                         file: "",
+                        showOnElytra: true,
                         autoColor: true,
                         color: "#FF0000",
                         scale: 1,
@@ -170,6 +181,10 @@
                         reader.onload = () => {
                             this.cropper.replace(reader.result)
                         };
+                    },
+                    changeElytra(value) {
+                        this.minecraftCapeCreator.showOnElytra(value.target.checked)
+                        this.buildCape();
                     },
                     changeImage() {
                         this.minecraftCapeCreator.setImage(this.cropper.getCroppedCanvas().toDataURL())

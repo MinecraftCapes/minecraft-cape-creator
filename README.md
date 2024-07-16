@@ -29,6 +29,16 @@ changeImage() {
     this.buildCape();
 }
 ```
+
+### Change Elytra Texture
+Should the image be on the elytra?
+```js
+showOnElytra(value) {
+    this.minecraftCapeCreator.showOnElytra(value /* value */)
+    this.buildCape();
+}
+```
+
 ### Change Cape/Elytra Color
 You can either set a hex value #FF0000 or use setAutoColor which will calculate the colour based on the image.
 ```js

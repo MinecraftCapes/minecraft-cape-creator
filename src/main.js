@@ -6,8 +6,7 @@ class MinecraftCapeCreator {
         this.AUTO_COLOR = "auto"
         this.color = this.AUTO_COLOR
         this.scale = 1;
-    }
-    loadImage() {
+        this.elytraImage = true;
     }
     setColor(color) {
         this.color = color;
@@ -21,6 +20,9 @@ class MinecraftCapeCreator {
     }
     setImage(image) {
         this.image = image
+    }
+    showOnElytra(value) {
+        this.elytraImage = value
     }
     buildCape() {
         return new Promise((resolve, reject) => {
@@ -63,13 +65,18 @@ class MinecraftCapeCreator {
                 img.onload = () => {
                     // Draw the image
                     this.context.drawImage(img, 1 * this.scale, 1 * this.scale, 10 * this.scale, 16 * this.scale); // The Cape
-                    this.context.drawImage(img, 36 * this.scale, 2 * this.scale, 10 * this.scale, 20 * this.scale); // The Elytra
 
                     // Set the auto colour if required
                     if(this.color == this.AUTO_COLOR) {
                         this.context.fillStyle = calculateAverageColor(this.context.getImageData(1 * this.scale, 1 * this.scale, 10 * this.scale, 16 * this.scale))
                     } else {
                         this.context.fillStyle = this.color;
+                    }
+
+                    if(this.elytraImage) {
+                        this.context.drawImage(img, 36 * this.scale, 2 * this.scale, 10 * this.scale, 20 * this.scale); // The Elytra
+                    } else {
+                        fillRect(36, 2, 10, 20); //Elytra
                     }
 
                     // Cape
