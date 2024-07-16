@@ -1,4 +1,6 @@
-# Minecraft Cape Creator
+# Minecraft Skin Viewer
+[![CI Status](https://img.shields.io/github/actions/workflow/status/MinecraftCapes/minecraft-cape-creator/build.yml?branch=main&label=deploy&logo=github&style=flat-square)](https://github.com/MinecraftCapes/minecraft-cape-creator/actions?query=workflow:deploy)
+[![NPM Package](https://img.shields.io/npm/v/minecraft-cape-creator.svg?style=flat-square)](https://www.npmjs.com/package/minecraft-cape-creator)
 
 Built for the [MinecraftCapes](https://minecraftcapes.net) website.
 
