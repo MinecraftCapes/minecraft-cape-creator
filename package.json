@@ -1,7 +1,6 @@
 {
   "name": "minecraft-cape-creator",
   "description": "An automatic cape creator from a provided image",
-  "private": true,
   "version": "0.0.1",
   "type": "module",
   "author": "james090500",
@@ -13,7 +12,7 @@
     "dist"
   ],
   "module": "./dist/minecraft-cape-creator.js",
-  "main": "./dist/minecraft-cape-creator.cjs",
+  "main": "./dist/minecraft-cape-creator.umd.cjs",
   "exports": {
     ".": {
       "import": "./dist/minecraft-cape-creator.js",
