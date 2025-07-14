@@ -1,7 +1,7 @@
 {
   "name": "minecraft-cape-creator",
   "description": "An automatic cape creator from a provided image",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "author": "james090500",
   "repository": {
@@ -26,7 +26,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "minecraft-skin-viewer": "^0.0.7",
-    "vite": "^5.3.1"
+    "minecraft-skin-viewer": "^0.0.10",
+    "vite": "^7.0.4"
   }
 }
