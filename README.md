@@ -30,6 +30,16 @@ changeImage() {
 }
 ```
 
+### Change Background Texture
+Should there be a background cape/elytra?
+Note: This must follow the cape/elytra templates
+```js
+showOnElytra(value) {
+    this.minecraftCapeCreator.setBackground(value /* url | base64 | local */)
+    this.buildCape();
+}
+```
+
 ### Change Elytra Texture
 Should the image be on the elytra?
 ```js

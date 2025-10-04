@@ -31,6 +31,11 @@
                                 </div>
                                 <br>
                                 <div>
+                                    <h4>Select Background (Optional)</h4>
+                                    <input type="file" class="form-control" @change="uploadBackground" accept="image/png">
+                                </div>
+                                <br>
+                                <div>
                                     <h4>Show on Elytra</h4>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" v-model="showOnElytra" @change="changeElytra">
@@ -176,11 +181,27 @@
                         this.minecraftSkinViewer.setElytra(value.target.checked)
                     },
                     uploadImage(event) {
-                        var reader = new FileReader()
-                        reader.readAsDataURL(event.target.files[0])
-                        reader.onload = () => {
-                            this.cropper.replace(reader.result)
-                        };
+                        if(event.target.files.length > 0) {
+                            var reader = new FileReader()
+                            reader.readAsDataURL(event.target.files[0])
+                            reader.onload = () => {
+                                this.cropper.replace(reader.result)
+                            };
+                        }
+                    },
+                    uploadBackground(event) {
+                        if(event.target.files.length == 0) {
+                            this.minecraftCapeCreator.setBackground(null)
+                            this.buildCape()
+                            return;
+                        } else {
+                            var reader = new FileReader()
+                            reader.readAsDataURL(event.target.files[0])
+                            reader.onload = () => {
+                                this.minecraftCapeCreator.setBackground(reader.result)
+                                this.buildCape()
+                            };
+                        }
                     },
                     changeElytra(value) {
                         this.minecraftCapeCreator.showOnElytra(value.target.checked)
