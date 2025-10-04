@@ -102,7 +102,7 @@ class MinecraftCapeCreator {
                 }
 
                 // Then draw the foreground/cape + elytra logic
-                if (bgImg) {
+                if (fgImg) {
                     // Cape image
                     ctx.drawImage(fgImg, 1 * this.scale, 1 * this.scale, 10 * this.scale, 16 * this.scale);
 
