@@ -1,7 +1,7 @@
 {
   "name": "minecraft-cape-creator",
   "description": "An automatic cape creator from a provided image",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "type": "module",
   "author": "james090500",
   "repository": {

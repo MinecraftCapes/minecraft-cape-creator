@@ -82,21 +82,25 @@ class MinecraftCapeCreator {
 
                 // Draw in correct z-order: background first
                 if (bgImg) {
-                    const tempCanvas = document.createElement('canvas').getContext('2d');
-                    tempCanvas.drawImage(bgImg, 0, 0);
-                    var imgData = tempCanvas.getImageData(0, 0, bgImg.width, bgImg.height).data;
+                    if(bgImg.width > 64 * this.scale && bgImg.height > 32 * this.scale) {
+                        ctx.drawImage(bgImg, 0, 0, ctx.canvas.width, ctx.canvas.height);
+                    } else {
+                        const tempCanvas = document.createElement('canvas').getContext('2d');
+                        tempCanvas.drawImage(bgImg, 0, 0);
+                        var imgData = tempCanvas.getImageData(0, 0, bgImg.width, bgImg.height).data;
 
-                    // Draw the zoomed-up pixels to a different canvas context
-                    for (var x = 0; x < bgImg.width; x++) {
-                        for (var y = 0; y < bgImg.height; y++){
-                            // Find the starting index in the one-dimensional image data
-                            var i = (y * bgImg.width + x) * 4;
-                            var r = imgData[i];
-                            var g = imgData[i+1];
-                            var b = imgData[i+2];
-                            var a = imgData[i+3];
-                            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a / 255})`;
-                            fillRect(x, y, 1, 1);
+                        // Draw the zoomed-up pixels to a different canvas context
+                        for (var x = 0; x < bgImg.width; x++) {
+                            for (var y = 0; y < bgImg.height; y++){
+                                // Find the starting index in the one-dimensional image data
+                                var i = (y * bgImg.width + x) * 4;
+                                var r = imgData[i];
+                                var g = imgData[i+1];
+                                var b = imgData[i+2];
+                                var a = imgData[i+3];
+                                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a / 255})`;
+                                fillRect(x, y, 1, 1);
+                            }
                         }
                     }
                 }
@@ -119,7 +123,7 @@ class MinecraftCapeCreator {
                     } else if (!this.background) {
                         fillRect(36, 2, 10, 20); // Elytra fallback when no background
                     }
-
+                    
                     if (!this.background) {
                         // Cape outlines/back
                         fillRect(0, 1, 1, 16);   // Left
@@ -138,7 +142,7 @@ class MinecraftCapeCreator {
                         fillRect(35, 2, 1, 9);   // Outside Wing
                     }
 
-                    if (this.elytraImage) {
+                    if (!this.background || (this.background && this.elytraImage)) {
                         // Remove Elytra parts
                         clearRect(36, 16, 1, 6); // Bottom Left
                         clearRect(37, 19, 1, 3); // Bottom Left
