@@ -4,7 +4,7 @@
 
 Built for the [MinecraftCapes](https://minecraftcapes.net) website.
 
-Demo - https://minecraft-cape-creator.pages.dev
+Demo - https://minecraft-cape-creator.james090500.workers.dev
 
 ## Example
 ### Creating an instance
